@@ -26,8 +26,9 @@ namespace WordCore
         }
         public void CreateWord(string savePath)
         {
-            Object Nothing = Missing.Value;
-            wordDoc = wordApp.Document.Add(ref Nothing, ref Nothing, ref Nothing, ref Nothing);
+
+            wordDoc = wordApp.Documents.Add(Missing.Value, Missing.Value, Missing.Value, Missing.Value);
+
         }
         public void OpenWord(string fileName)
         {
@@ -99,14 +100,17 @@ namespace WordCore
 
             dynamic nowTable = wordDoc.Tables.Item(tableIndex);
 
+            //  nowTable.PreferredWidth = 0;
+
             dynamic cell = nowTable.Cell(rowIndex, columnIndex).Range;
 
-           
-           
-             cell.Borders.OutsideLineStyle = WdLineStyle.wdLineStyleNone;
-            
+
+
+
+            // cell.Borders.OutsideLineStyle = WdLineStyle.wdLineStyleNone;
+
             // cell.Borders.OutsideLineWidth = WdOutlineLevel.wdOutlineLevelBodyText;
-             cell.Copy();
+            cell.Copy();
             //  wordApp.Selection.Start = cell.Start;
             //  wordApp.Selection.End = cell.End;
             //  wordApp.Selection.Copy();
@@ -115,16 +119,22 @@ namespace WordCore
         {
             GotoBookMark(bookMarkName);
             // wordApp.Selection.Paste();
-
-
             int i = 1;
             for (; i <= wordDoc.Bookmarks.Count; i++)
             {
                 if (wordDoc.Bookmarks[i].Name == bookMarkName)
                 {
                     wordDoc.Bookmarks[i].Range.Paste();
-
                     break;
+                }
+            }
+            dynamic tables = wordDoc.Tables;
+            int tableCount = tables.Count;
+            for (i = 1; i <= tableCount; i++)
+            {
+                if (i > 3)
+                {
+                    tables[i].ConvertToText(WdTableFieldSeparator.wdSeparateByParagraphs, false);
                 }
             }
             Clipboard.Clear();
@@ -150,10 +160,8 @@ namespace WordCore
 
                     tableMessage += "\n";
                 }
-
                 tables.Add(tableMessage);
             }
-
             return tables;
 
         }
@@ -166,14 +174,29 @@ namespace WordCore
             {
                 return;
             }
-            File.Copy(sourceWordFile, destinationWordFile, true);
+
+            OpenWord(sourceWordFile, true);
+
+            wordDoc.Range(1, 1).Select();
+
+            wordApp.Selection.WholeStory();
+
+            wordApp.Selection.Copy();
+
+            CreateWord(destinationWordFile);
+
+            wordApp.Selection.Paste();
+
+            SaveAs(destinationWordFile);
+
+
         }
         public void SaveAs(string strFileName)
         {
             object fileName = strFileName;
             object missing = Missing.Value;
-            wordDoc.SaveAs(ref fileName, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing,
-                              ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing);
+            wordDoc.SaveAs(fileName, missing, missing, missing, missing, missing, missing,
+                               missing, missing, missing, missing, missing, missing, missing, missing, missing);
         }
         public void Set_ComboBox_SelectedText(string comboBoxTitle, string selectedText)
         {

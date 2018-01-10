@@ -28,31 +28,44 @@ namespace WordCore.Tests
                 wordCore.Set_DropDownList_SelectedText("d3", "2");
             }
         }
-
-
         [TestMethod]
-        public void PastTest() {
+        public void PastTest()
+        {
             Microsoft.Office.Interop.Word.Application app = new Microsoft.Office.Interop.Word.ApplicationClass();
             app.Visible = false;
-            Microsoft.Office.Interop.Word.Document doc = app.Documents.Open(@"C:\Users\Administrator\Desktop\GenerateLetter\PW + ER Reason.doc",true);
+            Microsoft.Office.Interop.Word.Document doc = app.Documents.Open(@"C:\Users\Administrator\Desktop\GenerateLetter\PW + ER Reason.doc", true);
+            Bookmarks bookMarks = doc.Bookmarks;
 
-            // dynamic range=doc.Tables[1].Cell(5, 3).Range.Borders.OutsideLineStyle=WdLineStyle.wdLineStyleNone;
+            foreach (Bookmark bookMark in bookMarks)
+            {
 
-            Range range = doc.Tables[1].Cell(5, 3).Range;
+                if (bookMark.Name.Contains("bookmark"))
+                {
 
-            doc.Tables[1].Cell(1, 1).Range.AutoFormat();
-           // doc.Tables[1].Cell(1, 1).Range.al
+                    int start = bookMark.Start;
+                    int end = bookMark.End;
 
+                }
+
+            }
+            doc.Tables[1].ConvertToText(WdTableFieldSeparator.wdSeparateByParagraphs, false);
+
+            doc.Tables[1].Cell(5, 3).Range.PasteAndFormat(WdRecoveryType.wdTableOverwriteCells);
 
             doc.Close();
             app.Quit();
         }
+        [TestMethod]
+        public void CopyTest()
+        {
+            string reasonFile = @"C:\Users\Administrator\Desktop\GenerateLetter\PW + ER Reason.doc";
+            string templateFile = @"C:\Users\Administrator\Desktop\GenerateLetter\(chi) ER but missing information.doc";
 
-
-
-
-
-
+            using (WordCore wordCore = new WordCore())
+            {
+                wordCore.Copy(templateFile, @"C:\Users\Administrator\Desktop\GenerateLetter\(chi) ER but missing informationTest.doc");
+            }
+        }
         [TestMethod]
         public void LetterGenerationTest()
         {
@@ -61,12 +74,10 @@ namespace WordCore.Tests
             string reasonFile = @"C:\Users\Administrator\Desktop\GenerateLetter\PW + ER Reason.doc";
             string templateFile = @"C:\Users\Administrator\Desktop\GenerateLetter\(chi) ER but missing information.doc";
 
-          
-
             using (WordCore wordCore = new WordCore())
             {
                 List<ReasonInfo> reasons = new List<ReasonInfo>();
-                wordCore.OpenWord(@"C:\Users\Administrator\Desktop\GenerateLetter\PW + ER Reason.doc",true);
+                wordCore.OpenWord(@"C:\Users\Administrator\Desktop\GenerateLetter\PW + ER Reason.doc", true);
                 IList<string> codes = wordCore.GetTable_Clolumn_ByColumnIndex(1, 1);
                 IList<string> shortCodes = wordCore.GetTable_Clolumn_ByColumnIndex(1, 2);
                 for (int i = 0; i < codes.Count; i++)
@@ -75,12 +86,9 @@ namespace WordCore.Tests
                 }
                 wordCore.CopyTable_Cell_ByRowIndexAndColumnIndex(1, 5, 3);
 
-                wordCore.OpenWord(@"C:\Users\Administrator\Desktop\GenerateLetter\(chi) ER but missing information1.doc");
+                wordCore.OpenWord(@"C:\Users\Administrator\Desktop\GenerateLetter\(chi) ER but missing informationTest.doc");
                 wordCore.PastToBookmark("reason");
-
             }
-
         }
-
     }
 }
