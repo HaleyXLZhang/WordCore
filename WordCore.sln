@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WordCore", "WordCore\WordCore.csproj", "{AF06B845-E732-4AC7-9E3B-1EF63FC2273D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WordCoreTests", "WordCoreTests\WordCoreTests.csproj", "{242536DE-2FA5-429B-8174-BCFFFAF375F9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{AF06B845-E732-4AC7-9E3B-1EF63FC2273D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF06B845-E732-4AC7-9E3B-1EF63FC2273D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF06B845-E732-4AC7-9E3B-1EF63FC2273D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{242536DE-2FA5-429B-8174-BCFFFAF375F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{242536DE-2FA5-429B-8174-BCFFFAF375F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{242536DE-2FA5-429B-8174-BCFFFAF375F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{242536DE-2FA5-429B-8174-BCFFFAF375F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
