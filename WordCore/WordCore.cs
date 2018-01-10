@@ -97,23 +97,9 @@ namespace WordCore
         /// <returns></returns>
         public void CopyTable_Cell_ByRowIndexAndColumnIndex(int tableIndex, int rowIndex, int columnIndex)
         {
-
             dynamic nowTable = wordDoc.Tables.Item(tableIndex);
-
-            //  nowTable.PreferredWidth = 0;
-
             dynamic cell = nowTable.Cell(rowIndex, columnIndex).Range;
-
-
-
-
-            // cell.Borders.OutsideLineStyle = WdLineStyle.wdLineStyleNone;
-
-            // cell.Borders.OutsideLineWidth = WdOutlineLevel.wdOutlineLevelBodyText;
             cell.Copy();
-            //  wordApp.Selection.Start = cell.Start;
-            //  wordApp.Selection.End = cell.End;
-            //  wordApp.Selection.Copy();
         }
         public void PastToBookmark(string bookMarkName)
         {
