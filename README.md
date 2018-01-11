@@ -1,4 +1,17 @@
 # WordCore
+
+User Guide
+
+You must import WordCore.dll
+```
+using(WordCore wordCore = new WordCore())
+{
+   wordCore.Open("xxxx");
+   List<string> tables = wordCore.GetWordTables().ToList();
+}
+```
+
+
 ## Date 2018-01-11
 ### New features
    
