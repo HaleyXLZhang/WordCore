@@ -3,7 +3,7 @@
 User Guide
 
 You must import WordCore.dll
-```
+``` C#
 using(WordCore wordCore = new WordCore())
 {
    wordCore.Open("xxxx");
