@@ -50,6 +50,7 @@ namespace WordCore
                 Missing.Value,
                 Missing.Value,
                 Missing.Value);
+            wordDoc.Activate();
         }
         public void OpenWord(string fileName, bool isReadOnly)
         {
@@ -70,6 +71,7 @@ namespace WordCore
                 Missing.Value,
                 Missing.Value,
                 Missing.Value);
+            wordDoc.Activate();
         }
         /// <summary>
         /// 
@@ -101,7 +103,19 @@ namespace WordCore
             dynamic cell = nowTable.Cell(rowIndex, columnIndex).Range;
             cell.Copy();
         }
-        public void PastToBookmark(string bookMarkName)
+
+        public void AppendPasteContent()
+        {
+            object unite = WdUnits.wdStory;
+            wordApp.Selection.EndKey(ref unite, Type.Missing); //将光标移动到文档末尾
+            wordDoc.Paragraphs.Last.Range.Paste();
+            dynamic tables = wordDoc.Tables;
+            TableConvertToText(tables);
+            Clipboard.Clear();
+            wordDoc.Save();
+        }
+
+        public void PasteToBookmark(string bookMarkName)
         {
             GotoBookMark(bookMarkName);
             // wordApp.Selection.Paste();
@@ -115,6 +129,14 @@ namespace WordCore
                 }
             }
             dynamic tables = wordDoc.Tables;
+            TableConvertToText(tables);
+            Clipboard.Clear();
+            wordDoc.Save();
+        }
+
+        private  void TableConvertToText(dynamic tables)
+        {
+            int i;
             int tableCount = tables.Count;
             for (i = 1; i <= tableCount; i++)
             {
@@ -123,8 +145,8 @@ namespace WordCore
                     tables[i].ConvertToText(WdTableFieldSeparator.wdSeparateByParagraphs, false);
                 }
             }
-            Clipboard.Clear();
-            wordDoc.Save();
+
+           
         }
 
         public IList<string> GetWordTables()

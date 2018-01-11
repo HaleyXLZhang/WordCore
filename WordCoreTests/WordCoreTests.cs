@@ -48,6 +48,9 @@ namespace WordCore.Tests
                 }
 
             }
+           
+            doc.Activate();
+
             doc.Tables[1].ConvertToText(WdTableFieldSeparator.wdSeparateByParagraphs, false);
 
             doc.Tables[1].Cell(5, 3).Range.PasteAndFormat(WdRecoveryType.wdTableOverwriteCells);
@@ -87,7 +90,10 @@ namespace WordCore.Tests
                 wordCore.CopyTable_Cell_ByRowIndexAndColumnIndex(1, 5, 3);
 
                 wordCore.OpenWord(@"C:\Users\Administrator\Desktop\GenerateLetter\(chi) ER but missing informationTest.doc");
-                wordCore.PastToBookmark("reason");
+
+                wordCore.AppendPasteContent();
+                
+                // wordCore.PasteToBookmark("reason");
             }
         }
     }

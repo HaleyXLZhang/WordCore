@@ -12,6 +12,8 @@ namespace WordCore.Interface
         void OpenWord(string fileName, bool isReadOnly);
         IList<string> GetTable_Clolumn_ByColumnIndex(int tableIndex, int columnIndex);
         void CopyTable_Cell_ByRowIndexAndColumnIndex(int tableIndex, int rowIndex, int columnIndex);
+        void AppendPasteContent();
+        void PasteToBookmark(string bookMarkName);
         IList<string> GetWordTables();
         void Copy(string sourceWordFile, string destinationWordFile);
         void SaveAs(string strFileName);
