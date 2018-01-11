@@ -182,19 +182,11 @@ namespace WordCore
             {
                 return;
             }
-
             OpenWord(sourceWordFile, true);
-
-            wordDoc.Range(1, 1).Select();
-
             wordApp.Selection.WholeStory();
-
             wordApp.Selection.Copy();
-
             CreateWord(destinationWordFile);
-
             wordApp.Selection.Paste();
-
             SaveAs(destinationWordFile);
 
 

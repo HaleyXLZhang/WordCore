@@ -66,7 +66,7 @@ namespace WordCore.Tests
 
             using (WordCore wordCore = new WordCore())
             {
-                wordCore.Copy(templateFile, @"C:\Users\Administrator\Desktop\GenerateLetter\(chi) ER but missing informationTest.doc");
+                wordCore.Copy(templateFile, @"C:\Users\Administrator\Desktop\GenerateLetter\(chi) ER but missing informationTest1.doc");
             }
         }
         [TestMethod]
