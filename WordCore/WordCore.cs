@@ -104,16 +104,34 @@ namespace WordCore
             cell.Copy();
         }
 
-        public void AppendPasteContent()
+        public void AppendPasteContentToTable(int tableIndex)
         {
-            object unite = WdUnits.wdStory;
-            wordApp.Selection.EndKey(ref unite, Type.Missing); //将光标移动到文档末尾
-            wordDoc.Paragraphs.Last.Range.Paste();
-            dynamic tables = wordDoc.Tables;
-            TableConvertToText(tables);
+            // object unite = WdUnits.wdStory;
+            //  wordApp.Selection.EndKey(ref unite, Type.Missing); //将光标移动到文档末尾
+            //  wordDoc.Paragraphs.Last.Range.Paste();
+            if (wordDoc.Tables[tableIndex].Rows.Count >= 1)
+            {
+
+                string obj = wordDoc.Tables[tableIndex].Rows[wordDoc.Tables[tableIndex].Rows.Count].Cells[1].Range.Text;
+
+                if (string.IsNullOrEmpty(obj) || string.IsNullOrEmpty(obj.Replace("\r\a","")))
+                {
+                    wordDoc.Tables[tableIndex].Rows[wordDoc.Tables[tableIndex].Rows.Count].Cells[1].Range.Paste();
+                }
+                else
+                {
+                    wordDoc.Tables[tableIndex].Rows.Add();
+                    wordDoc.Tables[tableIndex].Rows[wordDoc.Tables[tableIndex].Rows.Count].Cells[1].Range.Paste();
+                }
+            }
+            //  dynamic tables = wordDoc.Tables;
+            // TableConvertToText(tables);
             Clipboard.Clear();
             wordDoc.Save();
         }
+
+
+
 
         public void PasteToBookmark(string bookMarkName)
         {
@@ -134,7 +152,15 @@ namespace WordCore
             wordDoc.Save();
         }
 
-        private  void TableConvertToText(dynamic tables)
+
+        public void SetTableCellValue(int tableIndex, int rowIndex, int columnIndex, string value)
+        {
+            dynamic tables = wordDoc.Tables;
+            tables[tableIndex].Cell(rowIndex, columnIndex).Range.Text = value;
+            wordDoc.Save();
+        }
+
+        private void TableConvertToText(dynamic tables)
         {
             int i;
             int tableCount = tables.Count;
@@ -146,7 +172,7 @@ namespace WordCore
                 }
             }
 
-           
+
         }
 
         public IList<string> GetWordTables()
