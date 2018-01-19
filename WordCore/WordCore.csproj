@@ -44,6 +44,7 @@
     <Compile Include="Common\WdGoToItem.cs" />
     <Compile Include="Common\WdLineStyle.cs" />
     <Compile Include="Common\WdOutlineLevel.cs" />
+    <Compile Include="Common\WdProtectionType.cs" />
     <Compile Include="Common\WdRecoveryType.cs" />
     <Compile Include="Common\WdSaveOptions.cs" />
     <Compile Include="Common\WdTableFieldSeparator.cs" />

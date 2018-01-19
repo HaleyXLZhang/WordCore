@@ -114,7 +114,7 @@ namespace WordCore
 
                 string obj = wordDoc.Tables[tableIndex].Rows[wordDoc.Tables[tableIndex].Rows.Count].Cells[1].Range.Text;
 
-                if (string.IsNullOrEmpty(obj) || string.IsNullOrEmpty(obj.Replace("\r\a","")))
+                if (string.IsNullOrEmpty(obj) || string.IsNullOrEmpty(obj.Replace("\r\a", "")))
                 {
                     wordDoc.Tables[tableIndex].Rows[wordDoc.Tables[tableIndex].Rows.Count].Cells[1].Range.Paste();
                 }
@@ -127,10 +127,19 @@ namespace WordCore
             //  dynamic tables = wordDoc.Tables;
             // TableConvertToText(tables);
             Clipboard.Clear();
+           // 
             wordDoc.Save();
         }
+        public void ProtectDocument(string DocumentName) {
+            OpenWord(DocumentName);
+            wordDoc.Protect(WdProtectionType.wdAllowOnlyFormFields, true, Type.Missing, Type.Missing, true);
 
-
+            wordDoc.Save();
+        }
+        public void AppendContentToFirstParagraphs(string text)
+        {
+            wordDoc.Paragraphs[1].Range.Text = wordDoc.Paragraphs[1].Range.Text + text;
+        }
 
 
         public void PasteToBookmark(string bookMarkName)

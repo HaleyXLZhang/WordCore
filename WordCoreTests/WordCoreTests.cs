@@ -38,14 +38,17 @@ namespace WordCore.Tests
 
             doc.Activate();
 
+
+
             //  doc.Tables[1].ConvertToText(WdTableFieldSeparator.wdSeparateByParagraphs, false);
             // doc.Tables[2].Cell(1, 3).Range.Text = "33";
             doc.Tables[3].Rows.Add();
             object unite = WdUnits.wdStory;
             app.Selection.EndKey(ref unite, Type.Missing); //将光标移动到文档末尾
-            doc.Tables[3].Rows[1].Cells[1].Range.Paste();
-            doc.Tables[3].Rows.Add(); 
+           // doc.Tables[3].Rows[1].Cells[1].Range.Paste();
+            doc.Tables[3].Rows.Add();
             Clipboard.Clear();
+            doc.Protect(WdProtectionType.wdAllowOnlyFormFields, true, Type.Missing, Type.Missing, true);
             doc.Save();
             doc.Save();
             doc.Close();
@@ -54,44 +57,58 @@ namespace WordCore.Tests
         [TestMethod]
         public void CopyTest()
         {
-            string reasonFile = @"C:\Users\Administrator\Desktop\GenerateLetter\PW + ER Reason.doc";
-            string templateFile = @"C:\Users\Administrator\Desktop\GenerateLetter\(chi) ER but missing information.doc";
+            //string reasonFile = @"C:\Users\Administrator\Desktop\GenerateLetter\PW + ER Reason.doc";
+            //string templateFile = @"C:\Users\Administrator\Desktop\GenerateLetter\(chi) ER but missing information.doc";
 
-            using (WordCore wordCore = new WordCore())
-            {
-                wordCore.Copy(templateFile, @"C:\Users\Administrator\Desktop\GenerateLetter\(chi) ER but missing informationTest1.doc");
-            }
+            //using (WordCore wordCore = new WordCore())
+            //{
+            //    wordCore.Copy(templateFile, @"C:\Users\Administrator\Desktop\GenerateLetter\(chi) ER but missing informationTest1.doc");
+            //}
+
+            string len = "\r\newrwer";
+
+
         }
         [TestMethod]
         public void LetterGenerationTest()
         {
             EmployeeInfo employee = new EmployeeInfo() { address = "陕西省西安市雁塔区天谷八路环普科技园1", eRID = "HR342389", language = "C", name = "Haley", title = "TestMessage" };
             EmployerInfo employer = new EmployerInfo() { schemeName = "计划名称", name = "中软国际", schemeNumber = "901213", schemeCode = "CHNSOFT", language = "C", eRID = "HR565", address = "陕西省西安市雁塔区天谷八路环普科技园2" };
+
             string reasonFile = @"C:\Users\Administrator\Desktop\GenerateLetter\PW + ER Reason.doc";
             string templateFile = @"C:\Users\Administrator\Desktop\GenerateLetter\(chi) ER but missing informationTest.doc";
+
             //if Language=="C" worLettertableIndex=3 Language=="E"  worLettertableIndex=4
             int worLettertableIndex = 3;
-            List<ReasonInfo> reasons = new List<ReasonInfo>();
+            ReasonInfo reasoninfo = new ReasonInfo();
+
             using (WordCore wordCore = new WordCore())
-            {              
+            {
                 wordCore.OpenWord(reasonFile, true);
                 IList<string> codes = wordCore.GetTable_Clolumn_ByColumnIndex(1, 1);
                 IList<string> shortCodes = wordCore.GetTable_Clolumn_ByColumnIndex(1, 2);
                 for (int i = 0; i < codes.Count; i++)
                 {
-                    reasons.Add(new ReasonInfo() { Code = codes[i], ShortCode = shortCodes[i], Row = i + 2, copyColumn = 3 });
+                    reasoninfo.Reasons.Add(new SelectReasonItem
+                    {
+                        Code = codes[i],
+                        ShortCode = shortCodes[i],
+                        Row = i + 2,
+                        CopyColumn = 3
+                    });
                 }
-                foreach (ReasonInfo code in reasons)
+                foreach (SelectReasonItem item in reasoninfo.Reasons)
                 {
-                    wordCore.CopyTable_Cell_ByRowIndexAndColumnIndex(1, code.Row, code.copyColumn);
+                    wordCore.CopyTable_Cell_ByRowIndexAndColumnIndex(1, item.Row, item.CopyColumn);
                     wordCore.OpenWord(templateFile);
                     wordCore.AppendPasteContentToTable(worLettertableIndex);
-                    wordCore.OpenWord(reasonFile, true);
-                }
+                    wordCore.OpenWord(reasonFile, true);     
+                }    
+                wordCore.ProtectDocument(templateFile);
             }
         }
 
-    
+
 
     }
 }
