@@ -118,9 +118,6 @@ namespace WordCore.Tests
             Microsoft.Office.Interop.Word.Document doc = app.Documents.Open(@"C:\Users\Administrator\Desktop\Solution Design Documnets\Letter Generation Automation Tool User Requirements v1.0.docx", false);
             doc.Activate();
 
-
-
-
             object unite = WdUnits.wdStory;
             //   app.Selection.EndKey(ref unite, Type.Missing); //将光标移动到文档末尾
             app.Selection.WholeStory();
@@ -134,11 +131,15 @@ namespace WordCore.Tests
             int end = app.Selection.Range.End;
             int length = app.Selection.Range.StoryLength;
             Microsoft.Office.Interop.Word.Range range = app.Selection.Range;
-
+            object p = range.Information[WdInformation.wdActiveEndPageNumber];
 
             range.SetRange(end - 1, app.ActiveDocument.Content.End);
-
+            
             int MoveStartWhileCount = range.MoveStartUntil("\r", WdConstants.wdBackward);
+
+
+       
+
 
             int getStart = range.Start;
             int getEnd = range.End;
