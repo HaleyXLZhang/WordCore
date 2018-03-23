@@ -34,22 +34,24 @@ namespace WordCore.Tests
         {
             Microsoft.Office.Interop.Word.Application app = new Microsoft.Office.Interop.Word.ApplicationClass();
             app.Visible = false;
-            Microsoft.Office.Interop.Word.Document doc = app.Documents.Open(@"C:\Users\Administrator\Desktop\GenerateLetter\(chi) ER but missing informationTest.doc", false);
+            Microsoft.Office.Interop.Word.Document doc = app.Documents.Open(@"C:\Users\Administrator\Desktop\WorkFiles\Letter Automation\Template\NewTemplate\(chi) Cancellation of PW1.doc", false);
 
             doc.Activate();
 
 
+            doc.Tables[2].Cell(2, 2).Range.FormFields[1].Result = "44444444";
+            int count = doc.FormFields.Count;
 
-            //  doc.Tables[1].ConvertToText(WdTableFieldSeparator.wdSeparateByParagraphs, false);
-            // doc.Tables[2].Cell(1, 3).Range.Text = "33";
-            doc.Tables[3].Rows.Add();
-            object unite = WdUnits.wdStory;
-            app.Selection.EndKey(ref unite, Type.Missing); //将光标移动到文档末尾
-           // doc.Tables[3].Rows[1].Cells[1].Range.Paste();
-            doc.Tables[3].Rows.Add();
-            Clipboard.Clear();
-            doc.Protect(WdProtectionType.wdAllowOnlyFormFields, true, Type.Missing, Type.Missing, true);
-            doc.Save();
+            //doc.Tables[1].ConvertToText(WdTableFieldSeparator.wdSeparateByParagraphs, false);
+            //doc.Tables[2].Cell(1, 3).Range.Text = "33";
+            //doc.Tables[3].Rows.Add();
+            //object unite = WdUnits.wdStory;
+            //app.Selection.EndKey(ref unite, Type.Missing); //将光标移动到文档末尾
+            //doc.Tables[3].Rows[1].Cells[1].Range.Paste();
+            //doc.Tables[3].Rows.Add();
+            //Clipboard.Clear();
+            //doc.Protect(WdProtectionType.wdAllowOnlyFormFields, true, Type.Missing, Type.Missing, true);
+            //doc.Save();
             doc.Save();
             doc.Close();
             app.Quit();
@@ -102,13 +104,59 @@ namespace WordCore.Tests
                     wordCore.CopyTable_Cell_ByRowIndexAndColumnIndex(1, item.Row, item.CopyColumn);
                     wordCore.OpenWord(templateFile);
                     wordCore.AppendPasteContentToTable(worLettertableIndex);
-                    wordCore.OpenWord(reasonFile, true);     
-                }    
+                    wordCore.OpenWord(reasonFile, true);
+                }
                 wordCore.ProtectDocument(templateFile);
             }
         }
 
+        [TestMethod]
+        public void SerachTextTest()
+        {
+            Microsoft.Office.Interop.Word.Application app = new Microsoft.Office.Interop.Word.ApplicationClass();
+            app.Visible = false;
+            Microsoft.Office.Interop.Word.Document doc = app.Documents.Open(@"C:\Users\Administrator\Desktop\Solution Design Documnets\Letter Generation Automation Tool User Requirements v1.0.docx", false);
+            doc.Activate();
 
+
+
+
+            object unite = WdUnits.wdStory;
+            //   app.Selection.EndKey(ref unite, Type.Missing); //将光标移动到文档末尾
+            app.Selection.WholeStory();
+            app.Selection.Find.Forward = true;
+            app.Selection.Find.ClearFormatting();
+            app.Selection.Find.MatchWholeWord = true;
+            app.Selection.Find.MatchCase = false;
+            app.Selection.Find.Wrap = WdFindWrap.wdFindContinue;
+            bool isFind = app.Selection.Find.Execute("Log文件夹");
+            int start = app.Selection.Range.Start;
+            int end = app.Selection.Range.End;
+            int length = app.Selection.Range.StoryLength;
+            Microsoft.Office.Interop.Word.Range range = app.Selection.Range;
+
+
+            range.SetRange(end - 1, app.ActiveDocument.Content.End);
+
+            int MoveStartWhileCount = range.MoveStartUntil("\r", WdConstants.wdBackward);
+
+            int getStart = range.Start;
+            int getEnd = range.End;
+            range.Select();
+            int paragraphsCount = range.Paragraphs.Count;
+            range.Find.Forward = true;
+            range.Find.ClearFormatting();
+            range.Find.MatchWholeWord = true;
+            range.Find.MatchCase = false;
+            range.Find.Wrap = WdFindWrap.wdFindContinue;
+            bool isFind2 = app.Selection.Range.Find.Execute("Log文件夹");
+
+            //doc.Protect(WdProtectionType.wdAllowOnlyFormFields, true, Type.Missing, Type.Missing, true);
+
+            doc.Save();
+            doc.Close();
+            app.Quit();
+        }
 
     }
 }
