@@ -111,13 +111,53 @@ namespace WordCore.Tests
         }
 
         [TestMethod]
+        public void FindTextInWord() {
+            string strKeyEng = "Should you have any queries or require any assistance";
+            string strKeyChi = "如有任何查詢或需要協助，請致電";
+            string strAppendEng = "According to our record, we have not received your “Employee Application Form”.  Therefore your address of the above account is not updated.  In order to enable us to set up a complete member record, please download the “Employee Application Form” from our website, complete and return together with all necessary documents to us for the above account.\r\n";
+            string strAppendChi = "根據我們的紀錄，我們尚未收到閣下的「僱員申請表」。因此，閣下於上述賬戶的地址並未更新。請閣下於我們的網址下載有關「僱員申請表」，填妥及連同所需文件遞交予我們，以便我們為閣下設立完整的成員紀錄。\r\n";
+            Microsoft.Office.Interop.Word.Application app = new Microsoft.Office.Interop.Word.ApplicationClass();
+            app.Visible = false;
+            Microsoft.Office.Interop.Word.Document doc = app.Documents.Open(@"C:\Users\Administrator\Desktop\LetterTool-DIS batch20181005\[Test](eng) Letter for DIS TI Account_20170405.docx");
+            doc.Activate();     
+            int i = 0, iCount = 0;
+            Microsoft.Office.Interop.Word.Find wfnd;
+            if (doc.Paragraphs != null && doc.Paragraphs.Count > 0)
+            {
+                iCount = doc.Paragraphs.Count;
+                for (i = 1; i <= iCount; i++)
+                {
+                    wfnd = doc.Paragraphs[i].Range.Find;
+                    wfnd.ClearFormatting();
+                    wfnd.Text = strKeyEng;
+                    if (wfnd.Execute(Type.Missing, Type.Missing,
+                        Type.Missing, Type.Missing,
+                        Type.Missing, Type.Missing,
+                        Type.Missing, Type.Missing,
+                        Type.Missing, Type.Missing,
+                        Type.Missing, Type.Missing,
+                        Type.Missing, Type.Missing,
+                        Type.Missing))
+                    {
+                        doc.Paragraphs[i-2].Range.Text = strAppendEng;
+                        break;
+                    }
+                }
+            }
+            doc.Save();
+            doc.Close();
+            app.Quit();
+        }
+
+
+        [TestMethod]
         public void SerachTextTest()
         {
             Microsoft.Office.Interop.Word.Application app = new Microsoft.Office.Interop.Word.ApplicationClass();
             app.Visible = false;
             Microsoft.Office.Interop.Word.Document doc = app.Documents.Open(@"C:\Users\Administrator\Desktop\Solution Design Documnets\Letter Generation Automation Tool User Requirements v1.0.docx", false);
             doc.Activate();
-
+            
             object unite = WdUnits.wdStory;
             //   app.Selection.EndKey(ref unite, Type.Missing); //将光标移动到文档末尾
             app.Selection.WholeStory();
@@ -158,6 +198,10 @@ namespace WordCore.Tests
             doc.Close();
             app.Quit();
         }
+
+
+
+
 
     }
 }
