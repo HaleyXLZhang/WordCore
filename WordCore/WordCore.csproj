@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommClass\Range.cs" />
     <Compile Include="Common\WdGoToItem.cs" />
     <Compile Include="Common\WdLineStyle.cs" />
     <Compile Include="Common\WdOutlineLevel.cs" />
@@ -50,6 +51,8 @@
     <Compile Include="Common\WdTableFieldSeparator.cs" />
     <Compile Include="Common\WdTwoLinesInOneType.cs" />
     <Compile Include="Common\WdUnits.cs" />
+    <Compile Include="EmunSet\WdFieldType.cs" />
+    <Compile Include="EmunSet\WdSaveFormat.cs" />
     <Compile Include="Interface\IWord.cs" />
     <Compile Include="WordCore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

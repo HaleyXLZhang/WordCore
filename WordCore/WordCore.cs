@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using WordCore.Common;
@@ -21,18 +20,26 @@ namespace WordCore
         private string openFileName = string.Empty;
         public WordCore()
         {
+            System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
             wordApp = Activator.CreateInstance(Type.GetTypeFromProgID("Word.Application"));
             wordApp.Visible = false;
         }
-        public void CreateWord(string savePath)
-        {
-
+        public void CreateWord(string directoryAndFileName, EmunSet.WdSaveFormat format= EmunSet.WdSaveFormat.wdFormatDocument)
+        {   
             wordDoc = wordApp.Documents.Add(Missing.Value, Missing.Value, Missing.Value, Missing.Value);
 
+            wordDoc.SaveAs(ref directoryAndFileName, ref format, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value);
+           
+            wordDoc.Close(Missing.Value, Missing.Value, Missing.Value);
+             
+            wordApp.Quit(Missing.Value, Missing.Value, Missing.Value);
+
+            wordDoc = null;
+
+            wordApp = null;
         }
         public void OpenWord(string fileName)
         {
-
             openFileName = fileName;
             wordDoc = wordApp.Documents.Open(fileName,
                 Missing.Value,
@@ -142,6 +149,34 @@ namespace WordCore
         }
 
 
+        public int SearchActiveDocumentParagraphIndex(string strKeyWords)
+        { 
+            int i = -1, iCount = -1;
+            dynamic wfnd;
+            if (wordDoc.Paragraphs != null && wordDoc.Paragraphs.Count > 0)
+            {
+                iCount = wordDoc.Paragraphs.Count;
+                for (i = 1; i <= iCount; i++)
+                {
+                    wfnd = wordDoc.Paragraphs[i].Range.Find;
+                    wfnd.ClearFormatting();
+                    wfnd.Text = strKeyWords;
+                    if (wfnd.Execute(Type.Missing, Type.Missing,
+                        Type.Missing, Type.Missing,
+                        Type.Missing, Type.Missing,
+                        Type.Missing, Type.Missing,
+                        Type.Missing, Type.Missing,
+                        Type.Missing, Type.Missing,
+                        Type.Missing, Type.Missing,
+                        Type.Missing))
+                    {  
+                        break;
+                    }
+                }
+            }
+            return i;
+        }
+
         public void PasteToBookmark(string bookMarkName)
         {
             GotoBookMark(bookMarkName);
@@ -160,7 +195,6 @@ namespace WordCore
             Clipboard.Clear();
             wordDoc.Save();
         }
-
 
         public void SetTableCellValue(int tableIndex, int rowIndex, int columnIndex, string value)
         {
@@ -200,13 +234,11 @@ namespace WordCore
                         tableMessage = tableMessage.Remove(tableMessage.Length - 2, 2);//remove \r\a
                         tableMessage += "\t";
                     }
-
                     tableMessage += "\n";
                 }
                 tables.Add(tableMessage);
             }
             return tables;
-
         }
         /// <summary>
         /// Copy full content from one word document to another
@@ -313,5 +345,7 @@ namespace WordCore
         {
             Quit();
         }
+
+       
     }
 }
