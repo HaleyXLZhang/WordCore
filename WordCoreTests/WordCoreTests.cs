@@ -34,10 +34,23 @@ namespace WordCore.Tests
             //WdSaveFormat为Word文档的保存格式
             object format = Microsoft.Office.Interop.Word.WdSaveFormat.wdFormatDocument;
 
+
+            wordApp.Selection.ParagraphFormat.LineSpacing = 12f;//设置文档的行间距
+          
+                                                                   //写入普通文本
+            strContent = "                                                         \r\n";
+            wordDoc.Paragraphs.Last.Range.Text = strContent;
+
+
+
+            object unite = Microsoft.Office.Interop.Word.WdUnits.wdStory;
+            wordApp.Selection.EndKey(ref unite, ref Nothing);
+
+            Range currentLastRange = wordDoc.Paragraphs.Last.Range;
+            currentLastRange.SetRange(1,2);
             //Add dropDowmWindow
-            Microsoft.Office.Interop.Word.Range range = wordApp.Selection.Range;
-            range.SetRange(6, 9);
-            FormField formField = wordApp.ActiveDocument.FormFields.Add(range, WdFieldType.wdFieldFormDropDown);
+            wordDoc.Paragraphs.Last.Range.Text = "\r\n";
+            FormField formField = wordApp.ActiveDocument.FormFields.Add(currentLastRange, WdFieldType.wdFieldFormDropDown);
             formField.DropDown.ListEntries.Add("Item0", 0);
             formField.DropDown.ListEntries.Add("Item1", 1);
             formField.DropDown.ListEntries.Add("Item2", 2);
@@ -54,8 +67,19 @@ namespace WordCore.Tests
                 }
             }
 
+            //add 文字型窗体域
+            wordDoc.Paragraphs.Last.Range.Paragraphs.Add();
+                   
+            FormField textFormField = wordDoc.Paragraphs.Last.Range.FormFields.Add(wordDoc.Paragraphs.Last.Range, WdFieldType.wdFieldFormTextInput);
+            textFormField.Result = "text form field";
 
-            wordDoc.Protect(WdProtectionType.wdAllowOnlyFormFields, true);
+            //add checkbox
+            wordDoc.Paragraphs.Last.Range.Paragraphs.Add();
+            currentLastRange.SetRange(12, 16);
+            FormField checkboxFormField = wordDoc.Paragraphs.Last.Range.FormFields.Add(wordDoc.Paragraphs.Last.Range, WdFieldType.wdFieldFormCheckBox);
+            checkboxFormField.CheckBox.Default = true;
+           
+            wordDoc.Protect(WdProtectionType.wdAllowOnlyFormFields, false, "",Type.Missing,Type.Missing);
 
             wordDoc.Unprotect(string.Empty);
             //将wordDoc文档对象的内容保存为DOC文档
@@ -72,7 +96,7 @@ namespace WordCore.Tests
             if (File.Exists((string)path)) File.Delete((string)path);
             using (WordCore wordCore = new WordCore())
             {
-                wordCore.CreateWord(path);   
+                wordCore.CreateWord(path);
             }
         }
         [TestMethod]
